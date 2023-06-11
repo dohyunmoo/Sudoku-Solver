@@ -1,21 +1,21 @@
 import pygame
 import verification
 
-width = 540
-height = 600
-grid_size = 60
-board_size = grid_size * 9
+pygame.init()
+
+WIDTH, HEIGHT = 540, 600
+CELL_SIZE = WIDTH // 9
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GRAY = (200, 200, 200)
 BLUE = (0, 0, 255)
+RED = (255, 0, 0)
 
-window = pygame.display.set_mode((width, height))
-window.fill(WHITE)
+window = pygame.display.set_mode((WIDTH, HEIGHT))
 
 # initial empty grid
-grid = [
+board = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -27,7 +27,7 @@ grid = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
 
-user_grid = [[0] * 9 for _ in range(9)]
+selected_cell = None
 
 def draw_grid():
     for i in range(10):
@@ -35,24 +35,107 @@ def draw_grid():
             thickness = 4
         else:
             thickness = 1
-        pygame.draw.line(window, BLACK, (0, i * grid_size), (board_size, i * grid_size), thickness)
-        pygame.draw.line(window, BLACK, (i * grid_size, 0), (i * grid_size, board_size), thickness)
+        pygame.draw.line(window, BLACK, (0, i * CELL_SIZE), (WIDTH, i * CELL_SIZE), thickness)
+        pygame.draw.line(window, BLACK, (i * CELL_SIZE, 0), (i * CELL_SIZE, WIDTH), thickness)
 
 
-pygame.display.set_caption("Sudoku Solver")
+def draw_numbers():
+    font = pygame.font.Font(None, 40)
 
-running = True
-while running:
-    # Event handling
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+    for row in range(9):
+        for col in range(9):
+            if board[row][col] != 0:
+                number = font.render(str(board[row][col]), True, BLACK)
+                number_rect = number.get_rect()
+                number_rect.center = ((col * CELL_SIZE) + (CELL_SIZE // 2), (row * CELL_SIZE) + (CELL_SIZE // 2))
+                window.blit(number, number_rect)
 
-    draw_grid()
-    # Update game logic
 
-    # Render the game
+def draw_selected_cell():
+    if selected_cell is not None:
+        pygame.draw.rect(window, RED, selected_cell, 5)
 
-    pygame.display.update()
+
+def get_selected_cell(mouse_pos):
+    row = mouse_pos[1] // CELL_SIZE
+    col = mouse_pos[0] // CELL_SIZE
+
+    return pygame.Rect(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+
+
+def update_selected_cell(mouse_pos):
+    global selected_cell
+    selected_cell = get_selected_cell(mouse_pos)
+
+
+def set_number(mouse_pos, number):
+    row = mouse_pos[1] // CELL_SIZE
+    col = mouse_pos[0] // CELL_SIZE
+
+    board[row][col] = number
+
+
+# def print_board():
+#     for row in board:
+#         print(row)
+
+
+def main():
+    pygame.display.set_caption("Sudoku Solver")
+
+    running = True
+
+    while running:
+        window.fill(WHITE)
+        draw_grid()
+        draw_numbers()
+        draw_selected_cell()
+        pygame.display.update()
+
+        # Event handling
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if mouse_pos[1] < 540:
+                    update_selected_cell(mouse_pos)
+                else:
+                    print(verification.verify(board))
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    if selected_cell is not None:
+                        set_number(selected_cell.topleft, 1)
+                elif event.key == pygame.K_2:
+                    if selected_cell is not None:
+                        set_number(selected_cell.topleft, 2)
+                elif event.key == pygame.K_3:
+                    if selected_cell is not None:
+                        set_number(selected_cell.topleft, 3)
+                elif event.key == pygame.K_4:
+                    if selected_cell is not None:
+                        set_number(selected_cell.topleft, 4)
+                elif event.key == pygame.K_5:
+                    if selected_cell is not None:
+                        set_number(selected_cell.topleft, 5)
+                elif event.key == pygame.K_6:
+                    if selected_cell is not None:
+                        set_number(selected_cell.topleft, 6)
+                elif event.key == pygame.K_7:
+                    if selected_cell is not None:
+                        set_number(selected_cell.topleft, 7)
+                elif event.key == pygame.K_8:
+                    if selected_cell is not None:
+                        set_number(selected_cell.topleft, 8)
+                elif event.key == pygame.K_9:
+                    if selected_cell is not None:
+                        set_number(selected_cell.topleft, 9)
+                elif event.key in [pygame.K_BACKSPACE, pygame.K_DELETE, pygame.K_0]:
+                    if selected_cell is not None:
+                        set_number(selected_cell.topleft, 0)
+
+
+if __name__ == "__main__":
+    main()
 
 pygame.quit()

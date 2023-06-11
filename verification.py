@@ -1,9 +1,9 @@
-def verify(self, board: list[list[str]]) -> bool:
+def verify(board: list[list[str]]) -> bool:
     # checking each row
     for row in board:
         data = {}
         for cell in row:
-            if cell != '.':
+            if cell != 0:
                 if data.get(cell) == None:
                     data.update({cell:1})
                 else:
@@ -15,7 +15,7 @@ def verify(self, board: list[list[str]]) -> bool:
         data = {}
 
         for row in board:
-            if row[col] != '.':
+            if row[col] != 0:
                 if data.get(row[col]) == None:
                     data.update({row[col]: 1})
                 else:
@@ -29,17 +29,17 @@ def verify(self, board: list[list[str]]) -> bool:
         for i in range(3):
             data = {}
             for j in range(3):
-                if board[i*row_mul][j + a*row_mul] != '.':
+                if board[i*row_mul][j + a*row_mul] != 0:
                     if data.get(board[i*row_mul][j + a*row_mul]) == None:
                         data.update({board[i*row_mul][j + a*row_mul]: 1})
                     else:
                         return False
-                if board[i*row_mul + 1][j + a*row_mul] != '.':
+                if board[i*row_mul + 1][j + a*row_mul] != 0:
                     if data.get(board[i*row_mul + 1][j + a*row_mul]) == None:
                         data.update({board[i*row_mul + 1][j + a*row_mul]: 1})
                     else:
                         return False
-                if board[i*row_mul + 2][j + a*row_mul] != '.':
+                if board[i*row_mul + 2][j + a*row_mul] != 0:
                     if data.get(board[i*row_mul + 2][j + a*row_mul]) == None:
                         data.update({board[i*row_mul + 2][j + a*row_mul]: 1})
                     else:
