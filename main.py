@@ -1,5 +1,6 @@
 import pygame
 import verification
+import solve
 
 pygame.init()
 
