@@ -1,4 +1,7 @@
 import pygame
+import copy
+
+# external files
 import verification
 import solve
 
@@ -8,7 +11,7 @@ WIDTH, HEIGHT = 540, 600
 CELL_SIZE = WIDTH // 9
 
 BUTTON_WIDTH = WIDTH // 5
-BUTTON_HEIGHT = CELL_SIZE // 3
+BUTTON_HEIGHT = CELL_SIZE // 2
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -21,7 +24,7 @@ window = pygame.display.set_mode((WIDTH, HEIGHT))
 
 button = pygame.Rect((WIDTH // 2 - BUTTON_WIDTH // 2, (HEIGHT - CELL_SIZE // 2) - BUTTON_HEIGHT // 2), (BUTTON_WIDTH, BUTTON_HEIGHT))
 
-# initial empty grid
+# initial empty board
 board = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -119,6 +122,8 @@ def main():
                     update_selected_cell(mouse_pos)
                 elif button.collidepoint(mouse_pos):
                     print(verification.verify(board))
+                    # print(solve.solve(board))
+                    board[0], board[1], board[2], board[3], board[4], board[5], board[6], board[7], board[8] = map(copy.copy, solve.solve(board))
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
                     if selected_cell is not None:
