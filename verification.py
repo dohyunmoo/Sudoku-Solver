@@ -1,4 +1,4 @@
-def verify(board: list[list[str]]) -> bool:
+def verify(board: list[list[int]]) -> bool:
     # checking each row
     for row in board:
         data = {}
