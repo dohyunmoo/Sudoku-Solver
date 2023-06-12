@@ -6,13 +6,19 @@ pygame.init()
 WIDTH, HEIGHT = 540, 600
 CELL_SIZE = WIDTH // 9
 
+BUTTON_WIDTH = WIDTH // 5
+BUTTON_HEIGHT = CELL_SIZE // 3
+
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GRAY = (200, 200, 200)
-BLUE = (0, 0, 255)
 RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
 
 window = pygame.display.set_mode((WIDTH, HEIGHT))
+
+button = pygame.Rect((WIDTH // 2 - BUTTON_WIDTH // 2, (HEIGHT - CELL_SIZE // 2) - BUTTON_HEIGHT // 2), (BUTTON_WIDTH, BUTTON_HEIGHT))
 
 # initial empty grid
 board = [
@@ -75,9 +81,18 @@ def set_number(mouse_pos, number):
     board[row][col] = number
 
 
-# def print_board():
-#     for row in board:
-#         print(row)
+def draw_button():
+    font = pygame.font.Font(None, 36)
+    text = font.render("Run!", True, BLACK)
+
+    if button.collidepoint(pygame.mouse.get_pos()):
+        pygame.draw.rect(window, RED, button)
+        text = font.render("Run!", True, WHITE)
+    else:
+        pygame.draw.rect(window, GRAY, button)
+
+    text_rect = text.get_rect(center=button.center)
+    window.blit(text, text_rect)
 
 
 def main():
@@ -90,6 +105,7 @@ def main():
         draw_grid()
         draw_numbers()
         draw_selected_cell()
+        draw_button()
         pygame.display.update()
 
         # Event handling
@@ -100,7 +116,7 @@ def main():
                 mouse_pos = pygame.mouse.get_pos()
                 if mouse_pos[1] < 540:
                     update_selected_cell(mouse_pos)
-                else:
+                elif button.collidepoint(mouse_pos):
                     print(verification.verify(board))
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
